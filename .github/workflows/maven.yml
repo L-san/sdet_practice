@@ -16,10 +16,7 @@ on:
 jobs:    
   build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1.2.0
-        
+    steps:    
       - uses: actions/checkout@v3
           
       - name: Set up JDK 11
