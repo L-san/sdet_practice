@@ -71,6 +71,13 @@ public class TestSmoke {
         String expectedMessage = "Customer added successfully with customer id";
         Assertions.assertTrue(actualMessage.startsWith(expectedMessage));
         driver.switchTo().alert().accept();
+
+        bankManagerPage.clickCustomersTabButton();
+        ngWebDriver.waitForAngularRequestsToFinish();
+        bankManagerPage.setTextToSearchTextField("Petya");
+        ngWebDriver.waitForAngularRequestsToFinish();
+        String text = bankManagerPage.getTextFromTable();
+        Assertions.assertTrue(text.contains("Petya Petrov"));
     }
 
     @Test
