@@ -8,7 +8,7 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 2. Сортировка клиентов по имени (First Name)
 3. Поиск клиента
 
-## Case #1: Успешное добавление пользователя(выполнение перед всеми тестами)
+## Case #1: Успешное добавление пользователя
 Предусловие:
 1. Открыть браузер
 2. Перейти на страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
@@ -28,6 +28,8 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 
 ## Case #2: Добавление пользователя-дубликата
 Предусловие:
+
+В системе должен присутствовать пользователь "Petya Petrov 101000"
 1. Открыть браузер
 2. Перейти на страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 
@@ -44,6 +46,8 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 
 ## Case #3: Успешное открытие счета
 Предусловие:
+
+В системе должен присутствовать пользователь "Petya Petrov 101000"
 1. Открыть браузер
 2. Перейти на страницу входа https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 
@@ -72,6 +76,8 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 
 ## Case #5: Поиск клиентов по имени
 Предусловие:
+
+В системе должен присутствовать пользователь "Petya Petrov 101000"
 1. Открыть браузер
 2. Перейти на страницу входа https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 

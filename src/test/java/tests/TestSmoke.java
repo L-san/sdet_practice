@@ -1,17 +1,19 @@
 package tests;
 
-import com.paulhammant.ngwebdriver.NgWebDriver;
-import io.qameta.allure.*;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-
+import pages.AddCustomerPage;
 import pages.BankManagerPage;
+import pages.CustomersPage;
+import pages.OpenAccountPage;
 import utils.WebDriverFactory;
 
 import java.time.Duration;
@@ -23,24 +25,9 @@ public class TestSmoke {
 
     protected static ThreadLocal<BankManagerPage> bankManagerPageInstance = new ThreadLocal<>();
     protected static ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
-    protected static ThreadLocal<NgWebDriver> ngWebDriverInstance = new ThreadLocal<>();
-
-    @BeforeEach
-    public void setup() {
-        WebDriver driver = WebDriverFactory.getChromeDriver();
-        driverInstance.set(driver);
-        bankManagerPageInstance.set(new BankManagerPage(driver));
-        ngWebDriverInstance.set(new NgWebDriver((JavascriptExecutor) driver));
-        ngWebDriverInstance.get().waitForAngularRequestsToFinish();
-
-        BankManagerPage bankManagerPage = getBankManagerPage();
-        NgWebDriver ngWebDriver = getNgWebDriver();
-
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-        driver.navigate().to(bankManagerPage.getPageLink());
-        ngWebDriver.waitForAngularRequestsToFinish();
-    }
+    private final String FIRST_NAME = "Petya";
+    private final String LAST_NAME = "Petrov";
+    private final String POST_CODE = "101000";
 
     protected WebDriver getDriver() {
         return driverInstance.get();
@@ -50,49 +37,40 @@ public class TestSmoke {
         return bankManagerPageInstance.get();
     }
 
-    protected NgWebDriver getNgWebDriver() {
-        return ngWebDriverInstance.get();
+    @BeforeEach
+    public void setup() {
+        WebDriver driver = WebDriverFactory.getChromeDriver();
+        driverInstance.set(driver);
+        bankManagerPageInstance.set(new BankManagerPage(driver));
+        BankManagerPage bankManagerPage = getBankManagerPage();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        driver.navigate().to(bankManagerPage.getPageLink());
     }
 
     @Test
-    @Issue("Case #1")
     @Feature(value = "Добавление нового пользователя")
-    @Story(value = "Добавление пользователя Петя Петров")
+    @Story(value = "Добавление пользователя")
     public void newCustomer() {
         WebDriver driver = getDriver();
-        BankManagerPage bankManagerPage = getBankManagerPage();
-        NgWebDriver ngWebDriver = getNgWebDriver();
+        addCustomer(FIRST_NAME, LAST_NAME, POST_CODE);
 
-        bankManagerPage.clickAddCustomerTabButton();
-        ngWebDriver.waitForAngularRequestsToFinish();
-        bankManagerPage.fillAddCustomerForm("Petya", "Petrov", "101000");
-        bankManagerPage.clickAddCustomerButton();
         String actualMessage = driver.switchTo().alert().getText();
         String expectedMessage = "Customer added successfully with customer id";
         Assertions.assertTrue(actualMessage.startsWith(expectedMessage));
         driver.switchTo().alert().accept();
 
-        bankManagerPage.clickCustomersTabButton();
-        ngWebDriver.waitForAngularRequestsToFinish();
-        bankManagerPage.setTextToSearchTextField("Petya");
-        ngWebDriver.waitForAngularRequestsToFinish();
-        String text = bankManagerPage.getTextFromTable();
-        Assertions.assertTrue(text.contains("Petya Petrov"));
+        assertIfSearchRequestContains("Petya","Petya Petrov");
     }
 
     @Test
-    @Issue("Case #2")
     @Feature(value = "Добавление нового пользователя")
     @Story(value = "Добавление пользователя-дубликата")
     public void duplicate() {
         WebDriver driver = getDriver();
-        BankManagerPage bankManagerPage = getBankManagerPage();
-        NgWebDriver ngWebDriver = getNgWebDriver();
+        addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
 
-        bankManagerPage.clickAddCustomerTabButton();
-        ngWebDriver.waitForAngularRequestsToFinish();
-        bankManagerPage.fillAddCustomerForm("Hermoine", "Granger", "E859AB");
-        bankManagerPage.clickAddCustomerButton();
+        addCustomer(FIRST_NAME, LAST_NAME, POST_CODE);
         String actualMessage = driver.switchTo().alert().getText();
         String expectedMessage = "Please check the details. Customer may be duplicate.";
         Assertions.assertTrue(actualMessage.startsWith(expectedMessage));
@@ -100,57 +78,68 @@ public class TestSmoke {
     }
 
     @Test
-    @Issue("Case #3")
     @Feature(value = "Открытие счета")
-    @Story(value = "Открытие счета для пользователя Hermoine Granger")
+    @Story(value = "Открытие счета для пользователя Petya Petrov")
     public void openAccount() {
         WebDriver driver = getDriver();
         BankManagerPage bankManagerPage = getBankManagerPage();
-        NgWebDriver ngWebDriver = getNgWebDriver();
+        addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
 
-        bankManagerPage.clickOpenAccountTabButton();
-        ngWebDriver.waitForAngularRequestsToFinish();
-        bankManagerPage.setNameAndCurrency("Hermoine Granger", "Dollar");
-        bankManagerPage.clickProcessButton();
+        OpenAccountPage openAccountPage = bankManagerPage.clickOpenAccountTabButton();
+        openAccountPage.setNameAndCurrency("Petya Petrov", "Dollar");
+        openAccountPage.clickProcessButton();
         String actualMessage = driver.switchTo().alert().getText();
         String expectedMessage = "Account created successfully with account Number";
         Assertions.assertTrue(actualMessage.startsWith(expectedMessage));
         driver.switchTo().alert().accept();
+
+        String[] ids = actualMessage.split(" :");
+        assertIfSearchRequestContains("Petya",ids[ids.length-1]);
     }
 
     @Test
-    @Issue("Case #4")
     @Feature(value = "Сортировка поисковой выдачи")
     @Story(value = "Сортировка клиентов по имени")
     public void sort() {
         BankManagerPage bankManagerPage = getBankManagerPage();
-        NgWebDriver ngWebDriver = getNgWebDriver();
-
-        bankManagerPage.clickCustomersTabButton();
-        ngWebDriver.waitForAngularRequestsToFinish();
-        bankManagerPage.clickFirstNameColumn();
-        bankManagerPage.clickFirstNameColumn();
-        Assertions.assertTrue(bankManagerPage.assertIfTableSortedByFirstName());
+        CustomersPage customersPage = bankManagerPage.clickCustomersTabButton();
+        customersPage.clickFirstNameColumn();
+        customersPage.clickFirstNameColumn();
+        Assertions.assertTrue(customersPage.assertIfTableSortedByFirstName());
     }
 
     @Test
-    @Issue("Case #5")
     @Feature(value = "Поиск клиентов")
-    @Story(value = "Поиск клиента Harry по имени")
+    @Story(value = "Поиск клиента Petya по имени")
     public void search() {
-        BankManagerPage bankManagerPage = getBankManagerPage();
-        NgWebDriver ngWebDriver = getNgWebDriver();
-
-        bankManagerPage.clickCustomersTabButton();
-        ngWebDriver.waitForAngularRequestsToFinish();
-        bankManagerPage.setTextToSearchTextField("Harry");
-        Assertions.assertTrue(bankManagerPage.getTextFromTable().contains("Harry"));
+        addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
+        assertIfSearchRequestContains("Petya","Petya");
     }
 
     @AfterEach
     public void quitDriver() {
         WebDriver driver = getDriver();
         if (driver != null) driver.quit();
+    }
+
+    private void addCustomer(String firstName, String lastName, String postCode) {
+        BankManagerPage bankManagerPage = getBankManagerPage();
+        AddCustomerPage addCustomerPage = bankManagerPage.clickAddCustomerTabButton();
+        addCustomerPage.fillAddCustomerForm(firstName, lastName, postCode);
+        addCustomerPage.clickAddCustomerButton();
+    }
+
+    private void addCustomerAndSwitchAlert(String firstName, String lastName, String postCode) {
+        WebDriver driver = getDriver();
+        addCustomer(firstName, lastName, postCode);
+        driver.switchTo().alert().accept();
+    }
+
+    private void assertIfSearchRequestContains(String request, String substring){
+        BankManagerPage bankManagerPage = getBankManagerPage();
+        CustomersPage customersPage = bankManagerPage.clickCustomersTabButton();
+        customersPage.setTextToSearchTextField(request);
+        Assertions.assertTrue(customersPage.getTextFromTable().contains(substring));
     }
 
 }
