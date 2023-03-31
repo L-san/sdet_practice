@@ -8,28 +8,36 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 2. Сортировка клиентов по имени (First Name)
 3. Поиск клиента
 
-## Case #1: Успешное добавление пользователя
+## Case #1: Успешное добавление пользователя(выполнение перед всеми тестами)
 Предусловие:
 1. Открыть браузер
 2. Перейти на страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
-3. Нажать кнопку “Add Customer” в основном меню
-4. Заполнить поле  First Name значением Petya
-5. Заполнить поле Last Name значением Petrov
-6. Заполнить поле Post Code значением 101000
-7. Нажать кнопку  “Add Customer” для отправки формы
+
+Шаги:
+1. Нажать кнопку “Add Customer” в основном меню
+2. Заполнить поле  First Name значением Petya
+3. Заполнить поле Last Name значением Petrov
+4. Заполнить поле Post Code значением 101000
+5. Нажать кнопку  “Add Customer” для отправки формы
 
 Ожидаемый результат:
 Появилось всплывающее окно с надписью, начинающейся на: “Customer added successfully with customer id”
+
+В таблице клиентов (нажать кнопку “Customers” в основном меню) появилась соответствующая запись
+
 
 ## Case #2: Добавление пользователя-дубликата
 Предусловие:
 1. Открыть браузер
 2. Перейти на страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
-3. Нажать кнопку “Add Customer” в основном меню
-4. Заполнить поле  First Name значением Hermoine
-5. Заполнить поле Last Name значением Granger
-6. Заполнить поле Post Code значением E859AB
-7. Нажать кнопку  “Add Customer” для отправки формы
+
+Шаги:
+1. Нажать кнопку “Add Customer” в основном меню
+2. Заполнить поле  First Name значением Petya
+3. Заполнить поле Last Name значением Petrov
+4. Заполнить поле Post Code значением 101000
+5. Нажать кнопку  “Add Customer” для отправки формы
+
 
 Ожидаемый результат:
 Появилось всплывающее окно с надписью: “Please check the details. Customer may be duplicate.”
@@ -38,20 +46,26 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 Предусловие:
 1. Открыть браузер
 2. Перейти на страницу входа https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
-3. Нажать кнопку “Open Account” в основном меню
-4. Выбрать аккаунт “Hermoine Granger” в dropdown меню Customer
-5. Выбрать аккаунт “Dollar” в dropdown меню Currency
-6. Нажать кнопку  “Process” для отправки формы
+
+Шаги:
+1. Нажать кнопку “Open Account” в основном меню
+2. Выбрать аккаунт “Petya Petrov” в dropdown меню Customer
+3. Выбрать аккаунт “Dollar” в dropdown меню Currency
+4. Нажать кнопку  “Process” для отправки формы
 
 Ожидаемый результат:
 Появилось всплывающее окно с надписью, начинающейся на: “Account created successfully with account Number”
+
+В таблице клиентов (нажать кнопку “Customers” в основном меню) присутствует соответствующая запись и поле Account Number заполнено
 
 ## Case #4: Сортировка клиентов по имени
 Предусловие:
 1. Открыть браузер
 2. Перейти на страницу входа https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
-3. Нажать кнопку “Customers” в основном меню
-4. Два раза нажать на поле “First Name”
+
+Шаги:
+1. Нажать кнопку “Customers” в основном меню
+2. Два раза нажать на поле “First Name”
 
 Ожидаемый результат:
 Имена в таблице отсортированы в алфавитном порядке
@@ -60,8 +74,10 @@ https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
 Предусловие:
 1. Открыть браузер
 2. Перейти на страницу входа https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager
-3. Нажать кнопку “Customers” в основном меню
-4. Ввести в строку поиска запрос “Harry”
+
+Шаги:
+1. Нажать кнопку “Customers” в основном меню
+4. Ввести в строку поиска запрос “Petya”
 
 Ожидаемый результат:
-В строке поисковой выдачи присутствует строка со значением Harry
+В строке поисковой выдачи присутствует строка со значением Petya
