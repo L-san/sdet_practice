@@ -24,7 +24,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-        
+          
+      - name: Install Google Chrome 
+        run: |
+               chmod +x ./scripts/InstallChrome.sh
+                           ./scripts/InstallChrome.sh 
+                           
       - name: Run Test
         if: always()
         run: mvn test
