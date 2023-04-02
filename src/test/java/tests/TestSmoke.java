@@ -38,7 +38,8 @@ public class TestSmoke {
     }
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws InterruptedException {
+        Thread.sleep(1000);
         WebDriver driver = WebDriverFactory.getChromeDriver();
         driverInstance.set(driver);
         bankManagerPageInstance.set(new BankManagerPage(driver));
