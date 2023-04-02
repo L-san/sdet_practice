@@ -26,9 +26,9 @@ jobs:
           distribution: 'adopt'
           
       - name: Install Google Chrome 
-        run: |
-               chmod +x ./scripts/InstallChrome.sh
-                           ./scripts/InstallChrome.sh 
+        uses: browser-actions/setup-chrome@v1.2.0
+        with:
+          chrome-version: 111
                            
       - name: Run Test
         if: always()
