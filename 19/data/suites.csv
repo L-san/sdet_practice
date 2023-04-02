@@ -1,0 +1,6 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"broken","Sun Apr 02 13:10:56 GMT 2023","Sun Apr 02 13:11:05 GMT 2023","9475","","tests.TestSmoke","","tests.TestSmoke","newCustomer","newCustomer()",""
+"broken","Sun Apr 02 13:10:59 GMT 2023","Sun Apr 02 13:10:59 GMT 2023","139","","tests.TestSmoke","","tests.TestSmoke","sort","sort()",""
+"broken","Sun Apr 02 13:10:59 GMT 2023","Sun Apr 02 13:10:59 GMT 2023","229","","tests.TestSmoke","","tests.TestSmoke","duplicate","duplicate()",""
+"broken","Sun Apr 02 13:10:58 GMT 2023","Sun Apr 02 13:10:58 GMT 2023","371","","tests.TestSmoke","","tests.TestSmoke","search","search()",""
+"broken","Sun Apr 02 13:10:56 GMT 2023","Sun Apr 02 13:11:05 GMT 2023","9476","","tests.TestSmoke","","tests.TestSmoke","openAccount","openAccount()",""
