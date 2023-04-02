@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class WebDriverFactory {
     public static ChromeDriver getChromeDriver(){
-        ChromeDriverManager.getInstance().setup("110.0.5452.0");
+        ChromeDriverManager.getInstance().setup("110.0.5481.30");
         ChromeOptions chromeOptions = new ChromeOptions();
         //chromeOptions.addArguments("--start-maximized");
         chromeOptions.addArguments("--remote-allow-origins=*");
