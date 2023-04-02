@@ -28,6 +28,8 @@ jobs:
           
       - name: Install Google Chrome 
         uses: browser-actions/setup-chrome@v1.2.0
+        with:
+          chrome-version: 111.0.5563.147
                            
       - name: Run Test
         if: always()
