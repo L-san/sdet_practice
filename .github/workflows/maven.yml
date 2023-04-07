@@ -15,6 +15,13 @@ on:
 jobs:    
   build:
     runs-on: ubuntu-latest
+    
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        options: --shm-size=2gb
+    
+    
     steps:    
       - uses: actions/checkout@v3
           
@@ -23,11 +30,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          
-      - name: Install Google Chrome 
-        uses: browser-actions/setup-chrome@v1.2.0
-        with:
-          chrome-version: 1078008
+  
                            
       - name: Run Test
         if: always()
