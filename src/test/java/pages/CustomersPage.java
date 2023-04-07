@@ -17,7 +17,7 @@ public class CustomersPage {
     @FindBy(xpath = "//input[@ng-model=\"searchCustomer\"]")
     private WebElement searchTextField;
 
-    @FindBy(xpath = ".//table/thead/tr/td")
+    @FindBy(xpath = "//table/thead/tr/td")
     private List<WebElement> tableColNames;
 
     @FindBy(xpath = "//a[@ng-click=\"sortType = 'fName'; sortReverse = !sortReverse\"]")
@@ -35,9 +35,9 @@ public class CustomersPage {
         searchTextField.sendKeys(text);
     }
 
-    @Step("Получить запись в таблице из строки c номером nRow")
-    public String getTextFromRow(int nRow) {
-        return tableRows.get(nRow).getText();
+    @Step("Получить запись в таблице из строки c номером rowNumber")
+    public String getTextFromRow(int rowNumber) {
+        return tableRows.get(rowNumber).getText();
     }
 
     @Step("Нажать на заголовок колонки таблицы First Name")
