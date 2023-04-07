@@ -8,8 +8,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class WebDriverFactory {
     public static ChromeDriver getChromeDriver(){
         ChromeDriverManager.getInstance().setup("110.0.5481.30");
+        //ChromeDriverManager.getInstance().setup("111");
         ChromeOptions chromeOptions = new ChromeOptions();
-        //chromeOptions.addArguments("--start-maximized");
         chromeOptions.addArguments("--remote-allow-origins=*");
         chromeOptions.addArguments("--no-sandbox");
         chromeOptions.addArguments("--headless"); //!!!should be enabled for Jenkins

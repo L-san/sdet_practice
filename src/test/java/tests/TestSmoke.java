@@ -17,14 +17,15 @@ import pages.OpenAccountPage;
 import utils.WebDriverFactory;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 
 @Epic(value = "Тестирование API XYZ банк")
 @Execution(ExecutionMode.CONCURRENT)
 public class TestSmoke {
 
-    protected static ThreadLocal<BankManagerPage> bankManagerPageInstance = new ThreadLocal<>();
-    protected static ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
+    protected ThreadLocal<BankManagerPage> bankManagerPageInstance = new ThreadLocal<>();
+    protected ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
     private final String FIRST_NAME = "Petya";
     private final String LAST_NAME = "Petrov";
     private final String POST_CODE = "101000";
@@ -38,12 +39,11 @@ public class TestSmoke {
     }
 
     @BeforeEach
-    public void setup() throws InterruptedException {
+    public void setup() {
         WebDriver driver = WebDriverFactory.getChromeDriver();
         driverInstance.set(driver);
         bankManagerPageInstance.set(new BankManagerPage(driver));
         BankManagerPage bankManagerPage = getBankManagerPage();
-        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         driver.navigate().to(bankManagerPage.getPageLink());
     }
@@ -60,7 +60,7 @@ public class TestSmoke {
         Assertions.assertTrue(actualMessage.startsWith(expectedMessage));
         driver.switchTo().alert().accept();
 
-        assertIfSearchRequestContains("Petya","Petya Petrov");
+        assertIfSearchRequestContains(FIRST_NAME, FIRST_NAME, "First Name");
     }
 
     @Test
@@ -86,7 +86,7 @@ public class TestSmoke {
         addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
 
         OpenAccountPage openAccountPage = bankManagerPage.clickOpenAccountTabButton();
-        openAccountPage.setNameAndCurrency("Petya Petrov", "Dollar");
+        openAccountPage.setNameAndCurrency(FIRST_NAME + " " +LAST_NAME, "Dollar");
         openAccountPage.clickProcessButton();
         String actualMessage = driver.switchTo().alert().getText();
         String expectedMessage = "Account created successfully with account Number";
@@ -94,7 +94,7 @@ public class TestSmoke {
         driver.switchTo().alert().accept();
 
         String[] ids = actualMessage.split(" :");
-        assertIfSearchRequestContains("Petya",ids[ids.length-1]);
+        assertIfSearchRequestContains(FIRST_NAME, ids[ids.length - 1], "Account Number");
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TestSmoke {
     @Story(value = "Поиск клиента Petya по имени")
     public void search() {
         addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
-        assertIfSearchRequestContains("Petya","Petya");
+        assertIfSearchRequestContains(FIRST_NAME, FIRST_NAME, "First Name");
     }
 
     @AfterEach
@@ -135,11 +135,14 @@ public class TestSmoke {
         driver.switchTo().alert().accept();
     }
 
-    private void assertIfSearchRequestContains(String request, String substring){
+    private void assertIfSearchRequestContains(String request, String substring, String columnName) {
         BankManagerPage bankManagerPage = getBankManagerPage();
         CustomersPage customersPage = bankManagerPage.clickCustomersTabButton();
         customersPage.setTextToSearchTextField(request);
-        Assertions.assertTrue(customersPage.getTextFromTable().contains(substring));
+        String tableText = customersPage.getTextFromTable();
+        ArrayList<String> list = customersPage.getColumnNames();
+        int index = list.indexOf(columnName);
+        Assertions.assertEquals(tableText.split(" ")[index], substring);
     }
 
 }

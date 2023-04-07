@@ -1,28 +1,28 @@
 package pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomersPage {
-
-    private final WebDriver driver;
 
     @FindBy(xpath = "//input[@ng-model=\"searchCustomer\"]")
     private WebElement searchTextField;
     @FindBy(xpath = "//tr[@ng-repeat=\"cust in Customers | orderBy:sortType:sortReverse | filter:searchCustomer\"]")
-    private WebElement repeaterTableSearch;
+    private WebElement table;
 
-    @FindBy(xpath = "//a[contains(text(),'\n" +
-            "            First Name\n" +
-            "            ')]")
+    @FindBy(xpath = ".//table/thead/tr/td")
+    private List<WebElement> tableColNames;
+
+    @FindBy(xpath = "//a[@ng-click=\"sortType = 'fName'; sortReverse = !sortReverse\"]")
     private WebElement firstNameColumn;
 
     @FindBy(xpath = "//tr")
@@ -30,7 +30,6 @@ public class CustomersPage {
 
     public CustomersPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
-        this.driver = driver;
     }
 
     @Step("Ввести текстовый запрос...")
@@ -38,14 +37,24 @@ public class CustomersPage {
         searchTextField.sendKeys(text);
     }
 
+    @Step("Удалить текстовый запрос...")
+    public void clearTextFromTextField() {
+        searchTextField.sendKeys("");
+    }
+
     @Step("Найти клиента по имени...")
     public String getTextFromTable() {
-        return repeaterTableSearch.getText();
+        return table.getText();
     }
 
     @Step("Нажать на заголовок колонки таблицы First Name")
     public void clickFirstNameColumn() {
         firstNameColumn.click();
+    }
+
+    @Step("Получить заголовки колонок таблицы")
+    public ArrayList<String> getColumnNames(){
+        return tableColNames.stream().map(WebElement::getText).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Step("Проверить, отсортированы ли значения в таблице")
