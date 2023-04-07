@@ -24,9 +24,9 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
- 
-      - name: Start Selenoid Server
-        uses: Xotabu4/selenoid-github-action@v2
+          
+      - uses: browser-actions/setup-chrome@latest
+      - run: chrome --version
                            
       - name: Run Test
         if: always()
