@@ -37,13 +37,8 @@ public class CustomersPage {
         searchTextField.sendKeys(text);
     }
 
-    @Step("Удалить текстовый запрос...")
-    public void clearTextFromTextField() {
-        searchTextField.sendKeys("");
-    }
-
-    @Step("Найти клиента по имени...")
-    public String getTextFromTable() {
+    @Step("Найти клиента...")
+    public String getTextFromFirstRow() {
         return table.getText();
     }
 

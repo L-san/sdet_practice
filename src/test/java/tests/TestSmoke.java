@@ -16,7 +16,6 @@ import pages.CustomersPage;
 import pages.OpenAccountPage;
 import utils.WebDriverFactory;
 
-import java.net.MalformedURLException;
 import java.time.Duration;
 import java.util.ArrayList;
 
@@ -25,26 +24,16 @@ import java.util.ArrayList;
 @Execution(ExecutionMode.CONCURRENT)
 public class TestSmoke {
 
-    protected ThreadLocal<BankManagerPage> bankManagerPageInstance = new ThreadLocal<>();
-    protected ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
+    protected BankManagerPage bankManagerPage;
+    protected WebDriver driver;
     private final String FIRST_NAME = "Petya";
     private final String LAST_NAME = "Petrov";
     private final String POST_CODE = "101000";
 
-    protected WebDriver getDriver() {
-        return driverInstance.get();
-    }
-
-    protected BankManagerPage getBankManagerPage() {
-        return bankManagerPageInstance.get();
-    }
-
     @BeforeEach
     public void setup() {
-        WebDriver driver = WebDriverFactory.getChromeDriver();
-        driverInstance.set(driver);
-        bankManagerPageInstance.set(new BankManagerPage(driver));
-        BankManagerPage bankManagerPage = getBankManagerPage();
+        driver = WebDriverFactory.getChromeDriver();
+        bankManagerPage = new BankManagerPage(driver);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         driver.navigate().to(bankManagerPage.getPageLink());
     }
@@ -53,7 +42,6 @@ public class TestSmoke {
     @Feature(value = "Добавление нового пользователя")
     @Story(value = "Добавление пользователя")
     public void newCustomer() {
-        WebDriver driver = getDriver();
         addCustomer(FIRST_NAME, LAST_NAME, POST_CODE);
 
         String actualMessage = driver.switchTo().alert().getText();
@@ -68,7 +56,6 @@ public class TestSmoke {
     @Feature(value = "Добавление нового пользователя")
     @Story(value = "Добавление пользователя-дубликата")
     public void duplicate() {
-        WebDriver driver = getDriver();
         addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
 
         addCustomer(FIRST_NAME, LAST_NAME, POST_CODE);
@@ -82,8 +69,6 @@ public class TestSmoke {
     @Feature(value = "Открытие счета")
     @Story(value = "Открытие счета для пользователя Petya Petrov")
     public void openAccount() {
-        WebDriver driver = getDriver();
-        BankManagerPage bankManagerPage = getBankManagerPage();
         addCustomerAndSwitchAlert(FIRST_NAME, LAST_NAME, POST_CODE);
 
         OpenAccountPage openAccountPage = bankManagerPage.clickOpenAccountTabButton();
@@ -102,7 +87,6 @@ public class TestSmoke {
     @Feature(value = "Сортировка поисковой выдачи")
     @Story(value = "Сортировка клиентов по имени")
     public void sort() {
-        BankManagerPage bankManagerPage = getBankManagerPage();
         CustomersPage customersPage = bankManagerPage.clickCustomersTabButton();
         customersPage.clickFirstNameColumn();
         customersPage.clickFirstNameColumn();
@@ -119,28 +103,25 @@ public class TestSmoke {
 
     @AfterEach
     public void quitDriver() {
-        WebDriver driver = getDriver();
         if (driver != null) driver.quit();
     }
 
     private void addCustomer(String firstName, String lastName, String postCode) {
-        BankManagerPage bankManagerPage = getBankManagerPage();
+        //BankManagerPage bankManagerPage = getBankManagerPage();
         AddCustomerPage addCustomerPage = bankManagerPage.clickAddCustomerTabButton();
         addCustomerPage.fillAddCustomerForm(firstName, lastName, postCode);
         addCustomerPage.clickAddCustomerButton();
     }
 
     private void addCustomerAndSwitchAlert(String firstName, String lastName, String postCode) {
-        WebDriver driver = getDriver();
         addCustomer(firstName, lastName, postCode);
         driver.switchTo().alert().accept();
     }
 
     private void assertIfSearchRequestContains(String request, String substring, String columnName) {
-        BankManagerPage bankManagerPage = getBankManagerPage();
         CustomersPage customersPage = bankManagerPage.clickCustomersTabButton();
         customersPage.setTextToSearchTextField(request);
-        String tableText = customersPage.getTextFromTable();
+        String tableText = customersPage.getTextFromFirstRow();
         ArrayList<String> list = customersPage.getColumnNames();
         int index = list.indexOf(columnName);
         Assertions.assertEquals(tableText.split(" ")[index], substring);
