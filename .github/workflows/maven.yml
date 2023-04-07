@@ -16,14 +16,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     
-    services:
-      selenium:
-        image: selenium/standalone-chrome
-        options: --shm-size=2gb
-        ports:
-            - 8081:8081
-            - 8082:8082
-    
     steps:    
       - uses: actions/checkout@v3
           
@@ -32,16 +24,15 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - uses: browser-actions/setup-chrome@latest
-      - run: chrome --version
+ 
+      - name: Start Selenoid Server
+        uses: Xotabu4/selenoid-github-action@v2
                            
       - name: Run Test
         if: always()
         run: mvn -B clean test
         continue-on-error: true
-        env:
-          BROWSER: chrome
-
+      
       - name: Get Allure history
         uses: actions/checkout@v3
         if: always()
