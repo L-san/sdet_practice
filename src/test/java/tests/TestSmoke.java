@@ -40,7 +40,7 @@ public class TestSmoke {
     }
 
     @BeforeEach
-    public void setup() throws MalformedURLException {
+    public void setup() {
         WebDriver driver = WebDriverFactory.getChromeDriver();
         driverInstance.set(driver);
         bankManagerPageInstance.set(new BankManagerPage(driver));
