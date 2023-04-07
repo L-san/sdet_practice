@@ -16,6 +16,7 @@ import pages.CustomersPage;
 import pages.OpenAccountPage;
 import utils.WebDriverFactory;
 
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ public class TestSmoke {
     }
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws MalformedURLException {
         WebDriver driver = WebDriverFactory.getChromeDriver();
         driverInstance.set(driver);
         bankManagerPageInstance.set(new BankManagerPage(driver));
