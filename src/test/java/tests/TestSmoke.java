@@ -121,7 +121,7 @@ public class TestSmoke {
     private void assertIfSearchRequestContains(String request, String substring, String columnName) {
         CustomersPage customersPage = bankManagerPage.clickCustomersTabButton();
         customersPage.setTextToSearchTextField(request);
-        String tableText = customersPage.getTextFromFirstRow();
+        String tableText = customersPage.getTextFromRow(0);
         ArrayList<String> list = customersPage.getColumnNames();
         int index = list.indexOf(columnName);
         Assertions.assertEquals(tableText.split(" ")[index], substring);
