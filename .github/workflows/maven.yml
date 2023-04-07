@@ -15,14 +15,6 @@ on:
 jobs:    
   build:
     runs-on: ubuntu-latest
-    container:
-      image: node:19
-      
-    services:
-      selenium:
-        image: selenium/standalone-chrome
-        options: --shm-size=2gb
-    
     
     steps:    
       - uses: actions/checkout@v3
@@ -31,15 +23,13 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          node-version: '19'
           distribution: 'adopt'
-  
+      - uses: browser-actions/setup-chrome@latest
+      - run: chrome --version
                            
       - name: Run Test
         if: always()
-        run: mvn test
-        env:
-          BROWSER: chrome
+        run: mvn -B clean test
         continue-on-error: true
 
       - name: Get Allure history
