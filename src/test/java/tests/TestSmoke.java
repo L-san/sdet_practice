@@ -62,7 +62,6 @@ public class TestSmoke {
         String actualMessage = driver.switchTo().alert().getText();
         String expectedMessage = "Please check the details. Customer may be duplicate.";
         Assertions.assertTrue(actualMessage.startsWith(expectedMessage));
-        driver.switchTo().alert().accept();
     }
 
     @Test
@@ -107,7 +106,6 @@ public class TestSmoke {
     }
 
     private void addCustomer(String firstName, String lastName, String postCode) {
-        //BankManagerPage bankManagerPage = getBankManagerPage();
         AddCustomerPage addCustomerPage = bankManagerPage.clickAddCustomerTabButton();
         addCustomerPage.fillAddCustomerForm(firstName, lastName, postCode);
         addCustomerPage.clickAddCustomerButton();
