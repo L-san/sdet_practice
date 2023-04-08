@@ -61,13 +61,6 @@
             <artifactId>webdrivermanager</artifactId>
             <version>1.4.5</version>
         </dependency>
-        <dependency>
-            <groupId>com.paulhammant</groupId>
-            <artifactId>ngwebdriver</artifactId>
-            <version>1.1.5</version>
-            <!-- You might want to delete the following line if you get "package com.paulhammant.ngwebdriver does not exist" errors -->
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
